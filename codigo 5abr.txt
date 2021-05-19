@@ -1,0 +1,153 @@
+library(flexdashboard)
+library(ggplot2)
+library(readr)
+library(highcharter)
+library(dplyr)
+library(plotly)
+
+#######################################
+#######################################
+inf_general <- read.csv('C:/Users/uticona/Documents/Office_feb_2021/Dashboard_inflación/inflacion_general.csv')
+inf_general$date <- as.Date(inf_general$fecha, format = "%Y-%m-%d")
+
+#Grafico anual
+chartA <- ggplot(data = inf_general, aes(x=date, y=Anual)) +
+  geom_line(color = "#00AFBB", size = 1)
+
+chartAA <- ggplotly(chartA)
+
+#Grafico mensual
+chartB <- ggplot(data = inf_general, aes(x=date, y=Mensual)) +
+  geom_line(color = "#FC4E07", size = 1)
+
+chartBB <- ggplotly(chartB)
+
+#Grafico acumulada
+chartC <- ggplot(data = inf_general, aes(x=date, y=Acumulada)) +
+  geom_line(color = "#E7B800", size = 1)
+
+chartCC <- ggplotly(chartC)
+
+
+#######################################
+#######################################
+#Tendencia núcleo
+chartD <- ggplot(data = inf_general, aes(x=date, y=Nucleo)) +
+  geom_line(size = 1)
+
+chartDD <- ggplotly(chartD)
+
+#Tendencia subyacente
+chartE <- ggplot(data = inf_general, aes(x=date, y=Subyacente)) +
+  geom_line(size = 1)
+
+chartEE <- ggplotly(chartE)
+
+#Tendencia núcleo
+chartF <- ggplot(data = inf_general, aes(x=date, y=Sin_Alimentos)) +
+  geom_line(size = 1)
+
+chartFF <- ggplotly(chartF)
+
+
+#######################################
+#######################################
+####Incidencias
+division <- read.csv('C:/Users/uticona/Documents/Office_feb_2021/Dashboard_inflación/division.csv')
+
+chartDiv <- ggplot(data = division, aes(x=value, y=reorder(name, value)))+
+    geom_bar(stat = "identity")
+
+chartDivDiv <- ggplotly(chartDiv)
+
+
+
+
+
+
+
+
+
+
+
+
+---
+title: "Dashboard Inflación en Bolivia - Marzo 2021"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+```
+
+Column {data-width=400, .tabset}
+-----------------------------------------------------------------------
+### Anual
+
+```{r}
+chartAA
+```
+
+### Mensual
+
+```{r}
+chartBB
+```
+
+### Acumulada
+
+```{r}
+chartCC
+```
+
+Column {data-width=300}
+-----------------------------------------------------------------------
+### Marzo-2021, Anual
+
+```{r}
+valueBox("1,2%", color="blue")
+```
+
+### Mensual
+
+```{r}
+valueBox("-0,1%", color="orange")
+```
+
+### Acumulada
+
+```{r}
+valueBox("0,5%", color="maroon")
+```
+
+### Incidencias por división
+
+```{r}
+chartDivDiv
+```
+
+
+Column {data-width=300, .tabset}
+-----------------------------------------------------------------------
+### Núcleo inflacionario
+
+```{r}
+chartDD
+```
+
+### Subyacente
+
+```{r}
+chartEE
+```
+
+
+### Sin Alimentos
+
+```{r}
+chartFF
+```
+
